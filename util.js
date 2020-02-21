@@ -29,6 +29,7 @@ module.exports = {
 
   /**
    * Signs a transaction with the local key.
+   * TODO: waiting on BitGO to split up the SDK to make this work.
    * @param {Object} wallet - wallet instance
    * @param {Object} prebuildTx - prebuilt transaction
    */
