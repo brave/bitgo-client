@@ -29,13 +29,16 @@ module.exports = {
   /**
    * Signs a transaction with the local key.
    * @param {string} coin - type of the wallet; ex: 'btc'
-   * @param {ArrayBuffer} seed - 32-byte input seed
+   * @param {Object} userKeychain - user keychain object
+   * @param {Object} backupKeychain - backup keychain object
    * @param {string} bitgoPub - bitgo public key
    * @param {Object} txPrebuild - transaction prebuild object from bitgo
    * @param {string} address - destination address
-   * @param <number> amount - amount in base value (satoshi/wei/etc.)
+   * @param <string> amount - amount in base value (satoshi/wei/etc.)
+   * @param <Object> addressInfo - extra info for the sending address
    */
-  signTransaction: async (coin, seed, bitgoPub, txPrebuild, address, amount) => {
+  signTransaction: async (coin, userKeychain, backupKeychain, bitgoPub,
+    txPrebuild, address, amount, addressInfo) => {
     // create a dummy wallet object
     const wallet = bitgo.coin(coin).newWalletObject({})
     // create transaction params from the user input
@@ -45,9 +48,9 @@ module.exports = {
         amount
       }]
     }
-    // all 3 keychains are needed for verifyTransaction
-    const userKeychain = module.exports.createKeychain(coin, seed)
-    const backupKeychain = module.exports.createKeychain(coin, seed, true)
+
+    const addresses = []
+    addresses[address] = addressInfo
 
     // verify transaction received from brave actually sends the right
     // amount to the address we are expecting
@@ -56,22 +59,27 @@ module.exports = {
       txPrebuild,
       wallet,
       verification: {
-        keychains: [
-          { pub: userKeychain.pub },
-          { pub: backupKeychain.pub },
-          { pub: bitgoPub }],
-        disableNetworking: true
+        addresses,
+        keychains: {
+          user: {
+            pub: userKeychain.pub
+          },
+          backup: {
+            pub: backupKeychain.pub
+          },
+          bitgo: {
+            pub: bitgoPub
+          }
+        },
+        disableNetworking: false // XXX: required or else throws 'error attempting to retrieve transaction details externally'
       }
     }
-    // verify transaction will throw if the transaction cannot be verified
     await wallet.baseCoin.verifyTransaction(verifyOptions)
 
     // sign the transaction, providing the tx prebuild, the encrypted user keychain, and the wallet passphrase.
     const signOptions = {
       txPrebuild,
-      keychain: {
-        prv: userKeychain.prv
-      }
+      prv: userKeychain.prv
     }
     return wallet.signTransaction(signOptions)
   }
