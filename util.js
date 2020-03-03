@@ -18,12 +18,16 @@ module.exports = {
     if (!seed || seed.byteLength !== 32) {
       throw new Error('Missing 32-byte input seed for createKeychain.')
     }
-    seed = Buffer.from(seed)
+    const seedBuffer = Buffer.from(seed)
+    let finalBuffer
     if (backup) {
       // BitGo wallet creation errors if the user and backup keys are the same.
-      seed[0]++
+      finalBuffer = Buffer.alloc(32, seedBuffer)
+      finalBuffer[0]++
+    } else {
+      finalBuffer = seedBuffer
     }
-    return bitgo.coin(coin).keychains().create(seed)
+    return bitgo.coin(coin).keychains().create({ seed: finalBuffer })
   },
 
   /**
@@ -71,7 +75,7 @@ module.exports = {
             pub: bitgoPub
           }
         },
-        disableNetworking: false // XXX: required or else throws 'error attempting to retrieve transaction details externally'
+        disableNetworking: false // XXX: set this to true once BitGo updates their SDK.
       }
     }
     await wallet.baseCoin.verifyTransaction(verifyOptions)
