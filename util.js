@@ -40,9 +40,10 @@ module.exports = {
    * @param {string} address - destination address
    * @param <string> amount - amount in base value (satoshi/wei/etc.)
    * @param <Object> addressInfo - extra info for the sending address
+   * @param {boolean?} disableVerify - not recommended except for some tests.
    */
   signTransaction: async (coin, userKeychain, backupKeychain, bitgoPub,
-    txPrebuild, address, amount, addressInfo) => {
+    txPrebuild, address, amount, addressInfo, disableVerify) => {
     // create a dummy wallet object
     const wallet = bitgo.coin(coin).newWalletObject({})
     // create transaction params from the user input
@@ -56,29 +57,33 @@ module.exports = {
     const addresses = []
     addresses[address] = addressInfo
 
-    // verify transaction received from brave actually sends the right
-    // amount to the address we are expecting
-    const verifyOptions = {
-      txParams,
-      txPrebuild,
-      wallet,
-      verification: {
-        addresses,
-        keychains: {
-          user: {
-            pub: userKeychain.pub
+    if (disableVerify) {
+      console.warn('Running without transaction verification! This is not recommended.')
+    } else {
+      // verify transaction received from brave actually sends the right
+      // amount to the address we are expecting
+      const verifyOptions = {
+        txParams,
+        txPrebuild,
+        wallet,
+        verification: {
+          addresses,
+          keychains: {
+            user: {
+              pub: userKeychain.pub
+            },
+            backup: {
+              pub: backupKeychain.pub
+            },
+            bitgo: {
+              pub: bitgoPub
+            }
           },
-          backup: {
-            pub: backupKeychain.pub
-          },
-          bitgo: {
-            pub: bitgoPub
-          }
-        },
-        disableNetworking: false // XXX: set this to true once BitGo updates their SDK.
+          disableNetworking: false // XXX: set this to true once BitGo updates their SDK.
+        }
       }
+      await wallet.baseCoin.verifyTransaction(verifyOptions)
     }
-    await wallet.baseCoin.verifyTransaction(verifyOptions)
 
     // sign the transaction, providing the tx prebuild, the encrypted user keychain, and the wallet passphrase.
     const signOptions = {
