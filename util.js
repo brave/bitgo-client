@@ -57,7 +57,9 @@ module.exports = {
     const addresses = {}
     addresses[address] = addressInfo
 
-    if (disableVerify) {
+    if (disableVerify && typeof it === 'function') {
+      // Disable verification for tests where we are trying to test server-side
+      // validation, not client-side validation (which is bypassable)
       console.warn('Running without transaction verification! This is not recommended.')
     } else {
       // verify transaction received from brave actually sends the right
