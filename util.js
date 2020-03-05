@@ -54,7 +54,7 @@ module.exports = {
       }]
     }
 
-    const addresses = []
+    const addresses = {}
     addresses[address] = addressInfo
 
     if (disableVerify) {
