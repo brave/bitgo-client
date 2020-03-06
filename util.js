@@ -2,10 +2,18 @@
 const BitGoJS = require('bitgo')
 
 // env doesn't matter since we aren't making any network calls to BitGo on the
-// client side
-const bitgo = new BitGoJS.BitGo({ env: 'test' })
+// client side. set to prod to support non-testnet coins.
+let bitgo = new BitGoJS.BitGo({ env: 'prod' })
 
 module.exports = {
+  /**
+   * Initialize the BitGo SDK. env is either 'prod' or 'test'
+   * Use 'test' to support testnet coins.
+   */
+  init: (env) => {
+    bitgo = new BitGoJS.BitGo({ env })
+  },
+
   /**
    * Takes a seed and converts it into a bitgo keychain.
    * @param {string} coin - type of the wallet; ex: 'btc'
