@@ -9,6 +9,6 @@
   "author": "",
   "license": "MPL-2.0",
   "dependencies": {
-    "bitgo": "^9.5.3"
+    "bitgo": "^10.0.0"
   }
 }

@@ -89,7 +89,7 @@ module.exports = {
               pub: bitgoPub
             }
           },
-          disableNetworking: false // XXX: set this to true once BitGo updates their SDK.
+          disableNetworking: true
         }
       }
       await wallet.baseCoin.verifyTransaction(verifyOptions)
