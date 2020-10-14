@@ -4,11 +4,16 @@
   "description": "client utils for Brave BitGo integration",
   "main": "index.js",
   "scripts": {
+    "audit": "yarn audit",
     "test": "echo \"Tests must be run in the bitgo-proxy directory\" && exit 1"
   },
   "author": "",
   "license": "MPL-2.0",
   "dependencies": {
-    "bitgo": "^11.0.1"
+    "bitgo": "^11.6.0"
+  },
+  "resolutions": {
+    "elliptic": "6.5.3",
+    "node-fetch": "2.6.1"
   }
 }
