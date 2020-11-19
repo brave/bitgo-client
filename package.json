@@ -10,10 +10,11 @@
   "author": "",
   "license": "MPL-2.0",
   "dependencies": {
-    "bitgo": "^11.6.0"
+    "bitgo": "^11.4.0"
   },
   "resolutions": {
     "elliptic": "6.5.3",
     "node-fetch": "2.6.1"
-  }
+  },
+  "type": "module"
 }

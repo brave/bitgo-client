@@ -1,18 +1,12 @@
 'use strict'
+
 const BitGoJS = require('bitgo')
 
-// env doesn't matter since we aren't making any network calls to BitGo on the
-// client side. set to prod to support non-testnet coins.
-let bitgo = new BitGoJS.BitGo({ env: 'prod' })
-
-module.exports = {
-  /**
-   * Initialize the BitGo SDK. env is either 'prod' or 'test'
-   * Use 'test' to support testnet coins.
-   */
-  init: (env) => {
-    bitgo = new BitGoJS.BitGo({ env })
-  },
+class BitGoClient {
+  // set to prod to support non-testnet coins.
+  constructor(env) {
+    this.bitgo = new BitGoJS.BitGo({ env })
+  }
 
   /**
    * Takes a seed and converts it into a bitgo keychain.
@@ -20,7 +14,7 @@ module.exports = {
    * @param {ArrayBuffer} seed - 32-byte input seed
    * @param {boolean} backup - true if this is a backup keychain
    */
-  createKeychain: (coin, seed, backup) => {
+  createKeychain (coin, seed, backup) {
     // Note: seed must be 32 bytes because Stellar and Algo require it. For
     // other coins, bitGoUtxoLib.HDNode.fromSeedBuffer accepts 16-64 bytes.
     if (!seed || seed.byteLength !== 32) {
@@ -35,8 +29,8 @@ module.exports = {
     } else {
       finalBuffer = seedBuffer
     }
-    return bitgo.coin(coin).keychains().create({ seed: finalBuffer })
-  },
+    return this.bitgo.coin(coin).keychains().create({ seed: finalBuffer })
+  }
 
   /**
    * Signs a transaction with the local key.
@@ -50,10 +44,10 @@ module.exports = {
    * @param <Object> addressInfo - extra info for the sending address
    * @param {boolean?} disableVerify - not recommended except for some tests.
    */
-  signTransaction: async (coin, userKeychain, backupKeychain, bitgoPub,
-    txPrebuild, address, amount, addressInfo, disableVerify) => {
+  async signTransaction (coin, userKeychain, backupKeychain, bitgoPub,
+    txPrebuild, address, amount, addressInfo, disableVerify) {
     // create a dummy wallet object
-    const wallet = bitgo.coin(coin).newWalletObject({})
+    const wallet = this.bitgo.coin(coin).newWalletObject({})
     // create transaction params from the user input
     const txParams = {
       recipients: [{
@@ -102,4 +96,10 @@ module.exports = {
     }
     return wallet.signTransaction(signOptions)
   }
+
+  verifyAddress (coin, address) {
+    return this.bitgo.coin(coin).isValidAddress(address)
+  }
 }
+
+module.exports = BitGoClient

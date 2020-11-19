@@ -1,5 +1,1 @@
-const util = require('./util')
-
-module.exports = {
-  util
-}
+module.exports = require('./client')

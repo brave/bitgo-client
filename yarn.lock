@@ -1132,7 +1132,7 @@ bitcoinjs-message@^2.0.0:
     secp256k1 "^3.0.1"
     varuint-bitcoin "^1.0.1"
 
-bitgo@^11.6.0:
+bitgo@^11.4.0:
   version "11.6.0"
   resolved "https://registry.yarnpkg.com/bitgo/-/bitgo-11.6.0.tgz#1e2afb14bce2c31396f75c8e87e2a8de7c009647"
   integrity sha512-/y3YZTJHJzNKXWVXXwZyaSjiKaMgf9vC4bZtKvig4yKDOp/osLOZibcvl8ktV8xc64odDGJVpzu8enGrFp9HGA==
@@ -1202,6 +1202,14 @@ bl@^4.0.3:
 "blake2b@git+https://github.com/BitGo/blake2b.git#6268e6dd678661e0acc4359e9171b97eb1ebf8ac":
   version "2.1.3"
   resolved "git+https://github.com/BitGo/blake2b.git#6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
+  dependencies:
+    blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
+    nanoassert "^1.0.0"
+
+"blake2b@https://github.com/BitGo/blake2b#6268e6dd678661e0acc4359e9171b97eb1ebf8ac":
+  version "2.1.3"
+  uid "6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
+  resolved "https://github.com/BitGo/blake2b#6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
   dependencies:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
     nanoassert "^1.0.0"
