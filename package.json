@@ -13,7 +13,9 @@
     "bitgo": "^11.6.0"
   },
   "resolutions": {
+    "axios": "0.21.1",
     "elliptic": "6.5.4",
-    "node-fetch": "2.6.1"
+    "node-fetch": "2.6.1",
+    "urijs": "1.19.4"
   }
 }
