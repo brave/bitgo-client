@@ -15,7 +15,10 @@
   "resolutions": {
     "axios": "0.21.1",
     "elliptic": "6.5.4",
+    "netmask": "2.0.1",
     "node-fetch": "2.6.1",
-    "urijs": "1.19.4"
+    "sanitize-html": "2.3.2",
+    "underscore": "1.12.1",
+    "urijs": "1.19.6"
   }
 }
